@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <script>
+      window.onload = () => {
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const a = 2 * Math.PI / 6;
+        const sqrt3 = Math.sqrt(3);
+        const size = 35;
+        const ox = 360;
+        const oy = 127.5;
+        const stepX = 64;
+        const stepY = 55.5;
+
+        function clear() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawHexagon(r, c) {
+          drawHexagonXy(ox + (c + r / 2) * stepX, oy + r * stepY);
+        };
+
+        function drawHexagonXy(x, y) {
+          ctx.shadowBlur = 7;
+          ctx.shadowColor = "rgb(255, 200, 0)";
+          ctx.strokeStyle = "rgb(255, 245, 0)";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          for (var i = 0; i < 6; i++) {
+            ctx.lineTo(x + size * Math.sin(a * i), y + size * Math.cos(a * i));
+          }
+          ctx.closePath();
+          ctx.stroke();
+        }
+
+        function hexRound(row, col) {
+          let z = -row - col;
+          let rx = Math.round(row);
+          let ry = Math.round(col);
+          let rz = Math.round(z);
+
+          let x_diff = Math.abs(rx - row);
+          let y_diff = Math.abs(ry - col);
+          let z_diff = Math.abs(rz - z);
+
+          if (x_diff > y_diff && x_diff > z_diff) { rx = -ry-rz; }
+          else if (y_diff > z_diff) { ry = -rx-rz; }
+          else { rz = -rx-ry; }
+
+          return [rx, ry];
+        }
+
+        function xyToRc(x, y) {
+          x -= ox;
+          y -= oy;
+          let col = (sqrt3 * x / 3 - y / 3) / size;
+          let row = (y * 2 / 3) / size;
+          let [A, B] = hexRound(row, col);
+          return [A, B];
+        };
+
+        canvas.addEventListener('mousemove', e => {
+          clear();
+          let [row, col] = xyToRc(e.offsetX, e.offsetY);
+          drawHexagon(row, col);
+        });
+      }
+    </script>
+    <style>
+      #canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="forest-hexcrawl.png" />
+    <canvas id="canvas" width="1280px" height="720px"></canvas>
+  </body>
+</html>
