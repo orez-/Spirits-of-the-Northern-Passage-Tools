@@ -10,6 +10,10 @@
         const size = 35;
         const ox = 360;
         const oy = 127.5;
+
+        // These values should be dependent on `size`, but... they're not?
+        // The math doesn't work out quite right.
+        // Who cares! It works.
         const stepX = 64;
         const stepY = 55.5;
 
@@ -54,16 +58,17 @@
         function xyToRc(x, y) {
           x -= ox;
           y -= oy;
-          let col = (sqrt3 * x / 3 - y / 3) / size;
-          let row = (y * 2 / 3) / size;
-          let [A, B] = hexRound(row, col);
-          return [A, B];
+          let col = (x - y/sqrt3) / stepX;
+          let row = y / stepY;
+          return hexRound(row, col);
         };
 
         canvas.addEventListener('mousemove', e => {
           clear();
           let [row, col] = xyToRc(e.offsetX, e.offsetY);
-          drawHexagon(row, col);
+          if (0 <= row && row <= 7 && 0 <= col && col <= 9) {
+            drawHexagon(row, col);
+          }
         });
       }
     </script>
