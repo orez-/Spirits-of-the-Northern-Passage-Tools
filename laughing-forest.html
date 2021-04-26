@@ -5,6 +5,9 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
 
+        const img = document.getElementById("map");
+        const hiliteImg = document.getElementById("hiliteMap");
+
         const a = 2 * Math.PI / 6;
         const sqrt3 = Math.sqrt(3);
         const size = 35;
@@ -41,7 +44,6 @@
         const stepY = 55.5;
 
         function clear() {
-          let img = document.getElementById("map");
           ctx.drawImage(img, 0, 0);
         }
 
@@ -93,19 +95,16 @@
           clear();
           let [row, col] = xyToRc(e.offsetX, e.offsetY);
           if (0 <= row && row <= 7 && 0 <= col && col <= 9) {
-            let img = document.getElementById("hiliteMap");
-
             let [sx, sy, sw, sh] = col_highlight_slices[col];
-            ctx.drawImage(img, sx, sy, sw, sh, sx, sy, sw, sh);
+            ctx.drawImage(hiliteImg, sx, sy, sw, sh, sx, sy, sw, sh);
 
             [sx, sy, sw, sh] = row_highlight_slices[row];
-            ctx.drawImage(img, sx, sy, sw, sh, sx, sy, sw, sh);
+            ctx.drawImage(hiliteImg, sx, sy, sw, sh, sx, sy, sw, sh);
 
             // The "G" overlaps the "H" a little bit. This just redraws
             // the unhighlighted "G" to remove the overlap.
             // Gross!
             if (row == 7) {
-              img = document.getElementById("map");
               [sx, sy, sw, sh] = row_highlight_slices[6];
               ctx.drawImage(img, sx, sy, sw, sh, sx, sy, sw, sh);
             }
