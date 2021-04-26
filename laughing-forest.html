@@ -14,6 +14,8 @@
         const ox = 352;
         const oy = 119.5;
 
+        let held = false;
+
         const row_highlight_slices = [
           [199, 87, 64, 64],
           [233, 150, 42, 51],
@@ -91,7 +93,12 @@
           return hexRound(row, col);
         };
 
+        canvas.addEventListener('mouseup', e => {
+          held ^= true;
+        });
+
         canvas.addEventListener('mousemove', e => {
+          if (held) { return; }
           clear();
           let [row, col] = xyToRc(e.offsetX, e.offsetY);
           if (0 <= row && row <= 7 && 0 <= col && col <= 9) {
